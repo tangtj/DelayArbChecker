@@ -1,11 +1,9 @@
 name: 'Build'
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -27,8 +25,9 @@ jobs:
         run: |
           CGO_ENABLED=0 go build -o app
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: app
-          path: app
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            app
